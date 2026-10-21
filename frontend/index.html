@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroGestor BI | Gestão Agrícola</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <aside class="sidebar">
+        <h2>🌱 AgroGestor <span>BI</span></h2>
+        <p class="menu-label">MENU PRINCIPAL</p>
+        <a class="active" href="#">▦ Visão geral</a>
+        <a href="#indicadores">▤ Indicadores</a>
+        <a href="#custos">◷ Custos agrícolas</a>
+        <div class="sidebar-bottom">Plataforma de gestão rural</div>
+    </aside>
+
+    <main class="content">
+        <header>
+            <div>
+                <p class="eyebrow">GESTÃO INTELIGENTE DO CAMPO</p>
+                <h1>Visão geral</h1>
+                <p class="subtitle">Acompanhe os resultados da sua operação agrícola.</p>
+            </div>
+            <span class="season">Safra 2026/2027</span>
+        </header>
+
+        <section class="intro">
+            <div>
+                <h2>Olá, produtor! 👋</h2>
+                <p>Confira o desempenho da sua propriedade.</p>
+            </div>
+            <span>Dados demonstrativos</span>
+        </section>
+
+        <section class="metrics" id="indicadores">
+            <article class="metric">
+                <p>Área plantada</p>
+                <h2>850 <small>ha</small></h2>
+                <span>Área cultivada</span>
+            </article>
+            <article class="metric">
+                <p>Produtividade estimada</p>
+                <h2>62 <small>sc/ha</small></h2>
+                <span>Por hectare</span>
+            </article>
+            <article class="metric">
+                <p>Custo por hectare</p>
+                <h2>R$ 2.450</h2>
+                <span>Custo estimado</span>
+            </article>
+            <article class="metric">
+                <p>Produção estimada</p>
+                <h2>52.700 <small>sc</small></h2>
+                <span>Produção total</span>
+            </article>
+        </section>
+
+        <section class="panels" id="custos">
+            <article class="panel">
+                <h3>Distribuição de custos</h3>
+                <p class="subtitle">Exemplo de participação por categoria</p>
+                <div class="cost-row">
+                    <div><span>Sementes</span><b>30%</b></div>
+                    <div class="track"><i style="width:30%"></i></div>
+                </div>
+                <div class="cost-row">
+                    <div><span>Fertilizantes</span><b>35%</b></div>
+                    <div class="track"><i style="width:35%"></i></div>
+                </div>
+                <div class="cost-row">
+                    <div><span>Defensivos</span><b>20%</b></div>
+                    <div class="track"><i style="width:20%"></i></div>
+                </div>
+                <div class="cost-row">
+                    <div><span>Operação</span><b>15%</b></div>
+                    <div class="track"><i style="width:15%"></i></div>
+                </div>
+            </article>
+            <article class="panel highlight">
+                <p class="eyebrow">RESUMO DA SAFRA</p>
+                <h3>Planejar melhor começa com dados.</h3>
+                <p>Organize áreas, acompanhe custos e compare a produtividade da sua operação em um só lugar.</p>
+                <button id="detailsButton">Ver resumo</button>
+                <p id="message" class="message"></p>
+            </article>
+        </section>
+        <footer>AgroGestor BI · Projeto de portfólio · Dados fictícios para demonstração</footer>
+    </main>
+</body>
+</html>

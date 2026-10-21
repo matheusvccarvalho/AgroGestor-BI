@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FAF9F6">
+    <title>AgroGestor BI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+    <a href="#conteudo" class="skip-link">Pular para o conteúdo</a>
+
+    <header class="app-header">
+        <div class="header-content">
+            <h1 class="app-title">
+                <i data-lucide="sprout" style="width: 18px; height: 18px; color: var(--accent);"></i>
+                AgroGestor <span class="highlight">BI</span>
+            </h1>
+            <nav aria-label="Navegação principal">
+                <a href="#" class="nav-link active" data-tab="dashboard">
+                    <i data-lucide="layout-dashboard" style="width: 14px; height: 14px;"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-link" data-tab="propriedades">
+                    <i data-lucide="map-pin" style="width: 14px; height: 14px;"></i>
+                    Propriedades
+                </a>
+                <a href="#" class="nav-link" data-tab="safras">
+                    <i data-lucide="wheat" style="width: 14px; height: 14px;"></i>
+                    Safras
+                </a>
+                <a href="#" class="nav-link" data-tab="custos">
+                    <i data-lucide="receipt" style="width: 14px; height: 14px;"></i>
+                    Custos
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main" id="conteudo">
+        <!-- Seção Dashboard -->
+        <section id="secao-dashboard" class="secao">
+            <div class="page-header">
+                <div>
+                    <h2>Dashboard</h2>
+                    <p class="subtitle">Visão geral da operação agrícola e indicadores financeiros.</p>
+                </div>
+            </div>
+
+            <div id="dashboard-error" class="state-message hidden error">
+                <p id="dashboard-error-text">Ocorreu um erro ao carregar o dashboard.</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="kpi-card kpi-card--total">
+                    <div class="kpi-label">
+                        <i data-lucide="trending-up" style="width: 14px; height: 14px;"></i>
+                        Valor total
+                    </div>
+                    <div class="kpi-value monetary" id="kpi-valor-total">R$ 0,00</div>
+                    <div class="kpi-sublabel">Acumulado geral</div>
+                </div>
+                <div class="kpi-card kpi-card--propriedades">
+                    <div class="kpi-label">
+                        <i data-lucide="map" style="width: 14px; height: 14px;"></i>
+                        Propriedades
+                    </div>
+                    <div class="kpi-value" id="kpi-propriedades">—</div>
+                    <div class="kpi-sublabel">Total cadastrado</div>
+                </div>
+                <div class="kpi-card kpi-card--safras">
+                    <div class="kpi-label">
+                        <i data-lucide="calendar" style="width: 14px; height: 14px;"></i>
+                        Safras
+                    </div>
+                    <div class="kpi-value" id="kpi-safras">—</div>
+                    <div class="kpi-sublabel">Total registrado</div>
+                </div>
+                <div class="kpi-card kpi-card--lancamentos">
+                    <div class="kpi-label">
+                        <i data-lucide="file-text" style="width: 14px; height: 14px;"></i>
+                        Lançamentos
+                    </div>
+                    <div class="kpi-value" id="kpi-custos">—</div>
+                    <div class="kpi-sublabel">Registros de custos</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card chart-card--categorias">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i data-lucide="pie-chart" style="width: 15px; height: 15px;"></i>
+                            Custos por categoria
+                        </h3>
+                        <div class="dashboard-filter">
+                            <label for="filtro-safra-dashboard">Safra:</label>
+                            <select id="filtro-safra-dashboard">
+                                <option value="">Todas as safras</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="grafico-categorias"></canvas>
+                        <div id="empty-categorias" class="chart-empty hidden">Nenhum custo registrado para exibir.</div>
+                    </div>
+                </div>
+
+                <div class="chart-card chart-card--ranking">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i data-lucide="bar-chart-3" style="width: 15px; height: 15px;"></i>
+                            Ranking por safra
+                        </h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="grafico-safras"></canvas>
+                        <div id="empty-safras" class="chart-empty hidden">Nenhuma safra com custos registrados.</div>
+                    </div>
+                </div>
+
+                <div class="chart-card full-width">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i data-lucide="activity" style="width: 15px; height: 15px;"></i>
+                            Evolução mensal dos custos
+                        </h3>
+                    </div>
+                    <div class="chart-container tall">
+                        <canvas id="grafico-evolucao"></canvas>
+                        <div id="empty-evolucao" class="chart-empty hidden">Nenhum custo com data de lançamento registrada.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Propriedades -->
+        <section id="secao-propriedades" class="secao hidden">
+            <div class="page-header">
+                <div>
+                    <h2>Propriedades</h2>
+                    <p class="subtitle">Cadastre e gerencie as propriedades rurais da sua operação.</p>
+                </div>
+                <button id="btn-nova-propriedade" class="btn btn-primary">
+                    <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                    Nova propriedade
+                </button>
+            </div>
+            <div id="loading-propriedades" class="state-message hidden">
+                <div class="spinner"></div>
+                <p>Carregando propriedades...</p>
+            </div>
+            <div id="empty-propriedades" class="state-message hidden">
+                <p>Nenhuma propriedade cadastrada.</p>
+                <button id="btn-primeira-propriedade" class="btn btn-secondary">Cadastrar a primeira</button>
+            </div>
+            <div id="error-propriedades" class="state-message hidden error">
+                <p id="error-propriedades-text">Ocorreu um erro ao carregar as propriedades.</p>
+            </div>
+            <div class="table-container">
+                <table id="tabela-propriedades" class="data-table hidden">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Município / UF</th>
+                            <th>Área (ha)</th>
+                            <th>Cadastro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-propriedades-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Seção Safras -->
+        <section id="secao-safras" class="secao hidden">
+            <div class="page-header">
+                <div>
+                    <h2>Safras</h2>
+                    <p class="subtitle">Registre as safras agrícolas por propriedade e cultura.</p>
+                </div>
+                <button id="btn-nova-safra" class="btn btn-primary">
+                    <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                    Nova safra
+                </button>
+            </div>
+            <div id="loading-safras" class="state-message hidden">
+                <div class="spinner"></div>
+                <p>Carregando safras...</p>
+            </div>
+            <div id="empty-safras" class="state-message hidden">
+                <p>Nenhuma safra cadastrada.</p>
+                <button id="btn-primeira-safra" class="btn btn-secondary">Cadastrar a primeira</button>
+            </div>
+            <div id="error-safras" class="state-message hidden error">
+                <p id="error-safras-text">Ocorreu um erro ao carregar as safras.</p>
+            </div>
+            <div class="table-container">
+                <table id="tabela-safras" class="data-table hidden">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Propriedade</th>
+                            <th>Cultura</th>
+                            <th>Período</th>
+                            <th>Área (ha)</th>
+                            <th>Produtividade</th>
+                            <th>Produção est.</th>
+                            <th>Custo/ha</th>
+                            <th>Ações</th> <!-- ADICIONADO PARA EDIÇÃO -->
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-safras-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Seção Custos -->
+        <section id="secao-custos" class="secao hidden">
+            <div class="page-header">
+                <div>
+                    <h2>Custos agrícolas</h2>
+                    <p class="subtitle">Registre e acompanhe os custos operacionais por safra.</p>
+                </div>
+                <div class="page-actions">
+                    <select id="filtro-safra-custos" class="form-select" aria-label="Filtrar custos por safra">
+                        <option value="">Todas as safras</option>
+                    </select>
+                    <button id="btn-novo-custo" class="btn btn-primary">
+                        <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                        Novo custo
+                    </button>
+                </div>
+            </div>
+            <div id="loading-custos" class="state-message hidden">
+                <div class="spinner"></div>
+                <p>Carregando custos...</p>
+            </div>
+            <div id="empty-custos" class="state-message hidden">
+                <p>Nenhum custo registrado para o filtro selecionado.</p>
+            </div>
+            <div id="error-custos" class="state-message hidden error">
+                <p id="error-custos-text">Ocorreu um erro ao carregar os custos.</p>
+            </div>
+            <div class="table-container">
+                <table id="tabela-custos" class="data-table hidden">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Safra</th>
+                            <th>Categoria</th>
+                            <th>Descrição</th>
+                            <th>Data</th>
+                            <th style="text-align: right;">Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-custos-body"></tbody>
+                    <tfoot id="tabela-custos-footer" class="hidden">
+                        <tr>
+                            <td colspan="5" style="text-align: right; font-weight: 600; color: var(--text-secondary);">Total</td>
+                            <td id="total-custos-valor" style="text-align: right; font-weight: 600; color: var(--accent);">R$ 0,00</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Cadastro/Edição de Propriedade -->
+    <dialog id="modal-propriedade" class="modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3 id="titulo-modal-propriedade">Nova propriedade</h3>
+                <button class="btn-icon btn-fechar-modal" aria-label="Fechar">
+                    <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                </button>
+            </header>
+            <form id="form-propriedade" class="modal-form">
+                <input type="hidden" id="propriedade-id" name="id">
+                <div class="form-group">
+                    <label for="prop-nome">Nome da propriedade</label>
+                    <input type="text" id="prop-nome" name="nome" required maxlength="120" placeholder="Ex: Fazenda Boa Esperança">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prop-municipio">Município</label>
+                        <input type="text" id="prop-municipio" name="municipio" maxlength="100" placeholder="Ex: Ribeirão Preto">
+                    </div>
+                    <div class="form-group">
+                        <label for="prop-estado">UF</label>
+                        <input type="text" id="prop-estado" name="estado" maxlength="2" placeholder="SP" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="prop-area">Área total (hectares)</label>
+                    <input type="number" id="prop-area" name="areaHectares" required min="0.01" step="0.01" placeholder="150,50">
+                </div>
+                <div id="form-errors-propriedade" class="form-errors hidden"></div>
+                <footer class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-salvar-propriedade">Salvar</button>
+                </footer>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Modal de Cadastro/Edição de Safra -->
+    <dialog id="modal-safra" class="modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3 id="titulo-modal-safra">Nova safra</h3> <!-- ID ADICIONADO -->
+                <button class="btn-icon btn-fechar-modal" aria-label="Fechar">
+                    <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                </button>
+            </header>
+            <form id="form-safra" class="modal-form">
+                <input type="hidden" id="safra-id" name="id"> <!-- INPUT OCULTO ADICIONADO -->
+                <div class="form-group">
+                    <label for="safra-propriedade">Propriedade</label>
+                    <select id="safra-propriedade" name="propriedadeId" required>
+                        <option value="">Selecione uma propriedade</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="safra-cultura">Cultura</label>
+                        <input type="text" id="safra-cultura" name="cultura" required maxlength="80" placeholder="Ex: Soja">
+                    </div>
+                    <div class="form-group">
+                        <label for="safra-periodo">Período</label>
+                        <input type="text" id="safra-periodo" name="periodo" required maxlength="20" placeholder="2025/2026">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="safra-area-plantada">Área plantada (hectares)</label>
+                    <input type="number" id="safra-area-plantada" name="areaPlantada" required min="0.01" step="0.01" placeholder="100,00">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="safra-produtividade">Produtividade estimada (sc/ha)</label>
+                        <input type="number" id="safra-produtividade" name="produtividadeEstimada" min="0.01" step="0.01" placeholder="60,00">
+                    </div>
+                    <div class="form-group">
+                        <label for="safra-custo">Custo por hectare (R$)</label>
+                        <input type="number" id="safra-custo" name="custoPorHectare" min="0.01" step="0.01" placeholder="3500,00">
+                    </div>
+                </div>
+                <div id="form-errors-safra" class="form-errors hidden"></div>
+                <footer class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-salvar-safra">Salvar</button> <!-- ID ADICIONADO -->
+                </footer>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Modal de Cadastro/Edição de Custo -->
+    <dialog id="modal-custo" class="modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3 id="titulo-modal-custo">Novo custo</h3>
+                <button class="btn-icon btn-fechar-modal" aria-label="Fechar">
+                    <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                </button>
+            </header>
+            <form id="form-custo" class="modal-form">
+                <input type="hidden" id="custo-id" name="id">
+                <div class="form-group">
+                    <label for="custo-safra">Safra</label>
+                    <select id="custo-safra" name="safraId" required>
+                        <option value="">Selecione uma safra</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="custo-categoria">Categoria</label>
+                        <input type="text" id="custo-categoria" name="categoria" required maxlength="80" placeholder="Ex: Fertilizantes">
+                    </div>
+                    <div class="form-group">
+                        <label for="custo-data">Data do lançamento</label>
+                        <input type="date" id="custo-data" name="dataLancamento">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="custo-descricao">Descrição</label>
+                    <input type="text" id="custo-descricao" name="descricao" required maxlength="255" placeholder="Ex: Adubo NPK para plantio">
+                </div>
+                <div class="form-group">
+                    <label for="custo-valor">Valor (R$)</label>
+                    <input type="number" id="custo-valor" name="valor" required min="0.01" step="0.01" placeholder="15000,50">
+                </div>
+                <div id="form-errors-custo" class="form-errors hidden"></div>
+                <footer class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </footer>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Toast de Notificação -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <script src="/js/charts-theme.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        // Inicializa os ícones Lucide uma única vez após o carregamento do DOM.
+        // Sem MutationObserver, para evitar loops infinitos de renderização.
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

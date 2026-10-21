@@ -1,0 +1,21 @@
+
+# Java e Maven
+target/
+*.class
+*.jar
+*.war
+
+# Configurações locais e credenciais
+.env
+.env.*
+!.env.example
+application-local.properties
+application-local.yml
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/

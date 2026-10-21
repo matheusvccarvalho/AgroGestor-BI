@@ -1,0 +1,1031 @@
+/* ==========================================================================
+   AgroGestor BI — style.css  (v2: direção de arte editorial / analítica)
+
+   Sistema cromático (cada cor tem uma função):
+   - Verde-floresta  #205C40  Marca: ações primárias, navegação ativa, valor total
+   - Verde natural   #43865D  Dados secundários, hover de barras
+   - Verde-sálvia    #A7BFA8  Dados de apoio (barras não destacadas)
+   - Terracota       #C87958  Destaque quente: lançamentos de custos
+   - Âmbar           #D5A64A  Dados categóricos
+   - Azul-ardósia    #647F99  Série temporal (evolução mensal)
+   - Ameixa          #8D7899  Dados categóricos
+   - Marfim          #F7F6F2  Fundo da aplicação
+
+   Nenhum ID, classe de comportamento ou atributo usado pelo app.js foi renomeado.
+   ========================================================================== */
+
+/* ---------- 1. Tokens ---------- */
+:root {
+    /* Paleta base */
+    --forest-900: #164430;
+    --forest: #205C40;
+    --green: #43865D;
+    --sage: #A7BFA8;
+    --terracotta: #C87958;
+    --terracotta-deep: #A25D40;
+    --amber: #D5A64A;
+    --slate: #647F99;
+    --slate-deep: #4B6783;
+    --plum: #8D7899;
+
+    /* Superfícies */
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --surface-2: #F1EFE9;
+    --surface-hover: #FAF9F6;
+    --filter-bg: #EEECE5;
+
+    /* Bordas */
+    --border: #E6E4DC;
+    --border-strong: #D5D2C8;
+
+    /* Texto (secundário levemente escurecido para atingir contraste AA) */
+    --text: #252923;
+    --text-secondary: #4D5149;
+    --text-muted: #6A6E66;
+
+    /* Marca */
+    --accent: var(--forest);
+    --accent-hover: var(--forest-900);
+    --accent-soft: #E4EEE8;
+    --accent-text: #1B4D35;
+    --accent-ring: rgba(32, 92, 64, 0.22);
+
+    /* Erro (distinto da terracota para não confundir destaque com perigo) */
+    --error: #A93226;
+    --error-bg: #FBF0EE;
+    --error-border: #EBC1BB;
+
+    /* Espaçamento */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+
+    /* Raios: controles < cartões < modais */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    /* Profundidade quase imperceptível */
+    --shadow-card: 0 1px 2px rgba(37, 41, 35, 0.04), 0 10px 24px -14px rgba(37, 41, 35, 0.10);
+    --shadow-md: 0 6px 18px rgba(37, 41, 35, 0.10);
+    --shadow-lg: 0 28px 56px -18px rgba(37, 41, 35, 0.32);
+
+    /* Tipografia */
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-serif: 'Newsreader', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+
+    /* Aliases legados (usados por estilos inline do HTML/JS) */
+    --color-primary: var(--accent);
+    --color-primary-hover: var(--accent-hover);
+    --color-primary-light: var(--accent-soft);
+    --color-bg: var(--bg);
+    --color-surface: var(--surface);
+    --color-text: var(--text);
+    --color-text-muted: var(--text-muted);
+    --color-border: var(--border);
+    --color-error: var(--error);
+    --color-error-bg: var(--error-bg);
+    --radius: var(--radius-md);
+}
+
+/* ---------- 2. Base ---------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--text);
+    background-color: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+::selection {
+    background: var(--accent-soft);
+    color: var(--accent-text);
+}
+
+:focus-visible {
+    outline: 2px solid var(--forest);
+    outline-offset: 2px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.lucide {
+    flex-shrink: 0;
+}
+
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: var(--space-2);
+    z-index: 100;
+    padding: var(--space-2) var(--space-4);
+    background: var(--forest);
+    color: #fff;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.skip-link:focus {
+    left: var(--space-4);
+}
+
+/* ---------- 3. Cabeçalho e navegação ----------
+   Navegação editorial: a seção ativa é marcada por uma linha de 2px
+   que repousa sobre o filete do cabeçalho. */
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 0 2rem;
+    background-color: rgba(247, 246, 242, 0.97);
+    border-bottom: 1px solid var(--border);
+}
+
+.header-content {
+    max-width: 1200px;
+    height: 3.75rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: var(--space-5);
+}
+
+.app-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    white-space: nowrap;
+}
+
+/* Marca: selo verde-floresta com o ícone em branco */
+.app-title svg {
+    box-sizing: content-box;
+    padding: 7px;
+    color: #fff !important;
+    background-color: var(--forest);
+    border-radius: var(--radius-md);
+}
+
+/* "BI" como selo tipográfico, sem recolorir parte do nome */
+.app-title .highlight {
+    padding: 1px 6px;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    transform: translateY(1px);
+}
+
+.header-content nav {
+    display: flex;
+    align-items: stretch;
+    gap: 1.75rem;
+}
+
+.nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 0.125rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nav-link:hover {
+    color: var(--text);
+}
+
+.nav-link.active {
+    color: var(--forest);
+    box-shadow: inset 0 -2px 0 var(--forest);
+}
+
+.nav-link.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ---------- 4. Conteúdo e cabeçalho de página ---------- */
+.app-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem var(--space-7);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-4);
+    margin-bottom: 2rem;
+}
+
+.page-header h2 {
+    font-family: var(--font-serif);
+    font-size: 1.875rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--text);
+}
+
+.subtitle {
+    margin-top: 0.25rem;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+}
+
+.page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+/* ---------- 5. Botões ---------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.5625rem 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: var(--forest);
+    color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--forest-900);
+}
+
+.btn-secondary {
+    background-color: var(--surface);
+    color: var(--text);
+    border-color: var(--border-strong);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--surface-2);
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-icon:hover {
+    background-color: var(--surface-2);
+    color: var(--text);
+}
+
+/* ---------- 6. Tabelas ---------- */
+.table-container {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.data-table th {
+    padding: 0.875rem 1rem 0.75rem;
+    text-align: left;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-strong);
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    font-variant-numeric: tabular-nums;
+}
+
+.data-table td:first-child {
+    color: var(--text-muted);
+}
+
+.data-table td:last-child {
+    white-space: nowrap;
+}
+
+.data-table tbody tr {
+    transition: background-color 0.12s ease;
+}
+
+.data-table tbody tr:hover {
+    background-color: var(--surface-hover);
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Safras: colunas numéricas alinhadas à direita (Área … Custo/ha) */
+#tabela-safras th:nth-child(n+5),
+#tabela-safras td:nth-child(n+5) {
+    text-align: right;
+}
+
+/* Rodapé de total: peso próprio, separado do corpo */
+.data-table tfoot td {
+    padding: 1rem;
+    background-color: var(--surface-2);
+    border-top: 1px solid var(--border-strong);
+    border-bottom: none;
+    font-size: 0.9375rem;
+}
+
+/* Ações de linha: discretas até o foco/hover (sempre visíveis e tocáveis) */
+.data-table .btn-secondary {
+    background-color: transparent;
+    border-color: transparent !important;
+    color: var(--text-secondary);
+}
+
+.data-table .btn-secondary:hover:not(:disabled) {
+    background-color: var(--surface-2);
+    color: var(--text);
+}
+
+.data-table .btn-excluir-custo:hover:not(:disabled) {
+    background-color: var(--error-bg);
+    color: var(--error) !important;
+}
+
+/* ---------- 7. Estados (carregando / vazio / erro) ---------- */
+.state-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-7) var(--space-4);
+    text-align: center;
+    color: var(--text-muted);
+    background-color: var(--surface);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+}
+
+.state-message p {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+}
+
+.state-message.error {
+    background-color: var(--error-bg);
+    border: 1px solid var(--error-border);
+}
+
+.state-message.error p {
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    color: var(--error);
+}
+
+#dashboard-error {
+    margin-bottom: var(--space-5);
+    padding: var(--space-4);
+}
+
+.spinner {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border-strong);
+    border-top-color: var(--forest);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ---------- 8. Modais ---------- */
+.modal {
+    width: calc(100% - 2rem);
+    max-width: 520px;
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    padding: 0;
+    overflow: auto;
+    color: var(--text);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.modal[open] {
+    animation: modal-in 0.18s ease-out;
+}
+
+.modal::backdrop {
+    background-color: rgba(37, 41, 35, 0.40);
+}
+
+@keyframes modal-in {
+    from { opacity: 0; transform: translateY(6px) scale(0.99); }
+    to   { opacity: 1; transform: none; }
+}
+
+.modal-content {
+    background-color: var(--surface);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+.modal-form {
+    --pad: 1.5rem;
+    padding: var(--pad);
+}
+
+/* Rodapé do modal em faixa marfim, separando as ações do conteúdo */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    margin: var(--space-5) calc(var(--pad) * -1) calc(var(--pad) * -1);
+    padding: 1rem var(--pad);
+    background-color: var(--bg);
+    border-top: 1px solid var(--border);
+}
+
+/* ---------- 9. Formulários e filtros ---------- */
+.form-group {
+    margin-bottom: 1.125rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+}
+
+#form-propriedade .form-row {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+/* Campos de formulário: brancos, com borda firme */
+.form-group input,
+.form-group select {
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: var(--text);
+    background-color: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-group input::placeholder {
+    color: #9A9D94;
+}
+
+.form-group input:hover,
+.form-group select:hover {
+    border-color: #BDBAAE;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.form-group input:user-invalid {
+    border-color: var(--error);
+}
+
+/* Filtros: tom neutro e sem borda, para se distinguirem de campos e ações */
+.form-select,
+.dashboard-filter select {
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: var(--text);
+    background-color: var(--filter-bg);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-select:hover,
+.dashboard-filter select:hover {
+    background-color: #E7E4DB;
+}
+
+.form-select:focus,
+.dashboard-filter select:focus {
+    outline: none;
+    background-color: var(--surface);
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+/* Seta própria para todos os selects */
+.form-group select,
+.form-select,
+.dashboard-filter select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 2.25rem;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236A6E66' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px;
+}
+
+.form-group select:disabled {
+    background-color: var(--surface-2);
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.form-select {
+    width: auto;
+    min-width: 220px;
+    max-width: 100%;
+}
+
+.form-errors {
+    margin-bottom: var(--space-4);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: var(--error);
+    background-color: var(--error-bg);
+    border: 1px solid var(--error-border);
+    border-radius: var(--radius-md);
+}
+
+.form-errors ul {
+    margin: 0.375rem 0 0 1.25rem;
+}
+
+/* ---------- 10. Notificação (toast) ---------- */
+.toast {
+    position: fixed;
+    right: var(--space-5);
+    bottom: var(--space-5);
+    z-index: 50;
+    max-width: calc(100vw - 2rem);
+    padding: 0.875rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    background-color: var(--forest);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    animation: toast-in 0.2s ease-out;
+}
+
+.toast.error {
+    background-color: var(--error);
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ---------- 11. Dashboard ---------- */
+
+/* Indicadores: o valor total é o protagonista (coluna mais larga, fundo
+   verde-floresta). Os demais têm uma cor de apoio cada, sem competir. */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.kpi-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1.5rem 1.375rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+}
+
+.kpi-label {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* Ícone em "selo" tonal: um tom por indicador */
+.kpi-label svg {
+    box-sizing: content-box;
+    padding: 6px;
+    border-radius: 7px;
+}
+
+.kpi-value {
+    margin-top: auto;
+    font-size: clamp(1.75rem, 1.2rem + 0.9vw, 2.125rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+    color: var(--text);
+}
+
+.kpi-sublabel {
+    margin-top: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+/* Propriedades: verde-floresta discreto */
+.kpi-card--propriedades .kpi-label svg {
+    color: var(--forest);
+    background-color: #E4EEE8;
+}
+
+/* Safras: verde-sálvia (nuance natural) */
+.kpi-card--safras .kpi-label svg {
+    color: #3C7452;
+    background-color: rgba(167, 191, 168, 0.38);
+}
+
+/* Lançamentos: terracota (tom complementar) */
+.kpi-card--lancamentos .kpi-label svg {
+    color: var(--terracotta-deep);
+    background-color: #F5E6DD;
+}
+
+/* Valor total: tratamento financeiro, tipografia serifada expressiva */
+.kpi-card--total {
+    color: #F7F6F2;
+    background-color: var(--forest);
+    border-color: var(--forest-900);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 14px 28px -16px rgba(22, 68, 48, 0.55);
+}
+
+.kpi-card--total .kpi-label {
+    color: rgba(247, 246, 242, 0.80);
+}
+
+.kpi-card--total .kpi-label svg {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+.kpi-card--total .kpi-value,
+.kpi-card--total .kpi-value.monetary {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 1.2rem + 1.5vw, 2.75rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #fff;
+}
+
+.kpi-card--total .kpi-sublabel {
+    color: rgba(247, 246, 242, 0.70);
+}
+
+/* Gráficos: grade de 12 colunas (5 + 7), evolução em largura total.
+   minmax(0, …) e min-width: 0 evitam que o canvas do Chart.js force o grid
+   a crescer e entre em laço de redimensionamento. */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.chart-card {
+    grid-column: span 6;
+    min-width: 0;
+    padding: 1.25rem 1.5rem 1.5rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+}
+
+.chart-card--categorias {
+    grid-column: span 5;
+}
+
+.chart-card--ranking {
+    grid-column: span 7;
+}
+
+.chart-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.chart-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.chart-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text);
+}
+
+.chart-title svg {
+    color: var(--text-muted);
+}
+
+/* Altura fixa + position: relative: contrato esperado pelo Chart.js
+   (responsive: true, maintainAspectRatio: false). */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+}
+
+.chart-container.tall {
+    height: 340px;
+}
+
+.chart-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: var(--space-5);
+    font-size: 0.875rem;
+    text-align: center;
+    color: var(--text-muted);
+    background-color: var(--bg);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+}
+
+.dashboard-filter {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.dashboard-filter label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.dashboard-filter select {
+    width: auto;
+    min-width: 170px;
+    min-height: 2.25rem;
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+}
+
+/* ---------- 12. Responsividade ---------- */
+@media (max-width: 1100px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .kpi-card--total {
+        grid-column: 1 / -1;
+    }
+
+    .chart-card--categorias,
+    .chart-card--ranking {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-header {
+        padding: 0 1rem;
+    }
+
+    .header-content {
+        height: auto;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+
+    .app-title {
+        padding: 0.75rem 0 0.25rem;
+    }
+
+    .header-content nav {
+        gap: 1.25rem;
+        height: 2.75rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .header-content nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .app-main {
+        padding: var(--space-5) 1rem var(--space-6);
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        margin-bottom: var(--space-5);
+    }
+
+    .page-header h2 {
+        font-size: 1.625rem;
+    }
+
+    .page-header > .btn {
+        align-self: flex-start;
+    }
+
+    .page-actions .form-select {
+        flex: 1 1 100%;
+    }
+
+    .form-row,
+    #form-propriedade .form-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+    }
+
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dashboard-filter {
+        width: 100%;
+    }
+
+    .dashboard-filter select {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .chart-container,
+    .chart-container.tall {
+        height: 290px;
+    }
+
+    .toast {
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        max-width: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .chart-card {
+        padding: 1rem 1rem 1.25rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .modal-form {
+        --pad: 1.25rem;
+    }
+
+    .modal-footer .btn {
+        flex: 1;
+    }
+}
+
+/* ---------- 13. Movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
